@@ -9,12 +9,31 @@ mongoose
 .catch(error => console.log(error));
 
 const tastSchema = new Schema({
-  title: String,
+  title: {
+    type: String, 
+    require: [true, "Task have to be"],
+    validate:{
+      validator: (v)=>/[A-Z][a-z\s]{4,200}/.test(v),
+      message: '{VALUE} must be letter'
+    }
+  },
   date: { type: Date, default: Date.now },
-  isDone: Boolean,
+  isDone: { type: Boolean, default: false },
   author: {
-    name:String,
-    age: Number
+    name:{
+      type: String, 
+      require: true
+    },
+    email:{
+      validate: yup.string().email().required()
+    },
+    age: {
+      type: Number,
+      default:null,
+      validate:{
+        validator: (v)=>v>0
+      } 
+    }
   }
 });
 

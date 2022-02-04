@@ -2,6 +2,11 @@ POST http://localhost:3000/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "create new task",
-  "isDone": true
+  "title": "Test yup ",
+  "isDone": true,
+  "author":{
+    "name": "p ew",
+    "email" : "qwe@fasdf.com",
+    "age": 50
+  }
 }
