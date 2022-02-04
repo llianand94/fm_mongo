@@ -1,0 +1,37 @@
+use('fm_mongo');
+// db.createCollection("movies",{
+//   validator:{
+//     $jsonSchema:{
+//       bsonType: "object",
+//       required: ["title",  "director", "info"],
+//       properties:{
+//         title:{
+//           bsonType: "string",
+//           description: "Must be a text and is required"
+//         },
+//         director:{bsonType: "string"},
+//         info:{
+//           bsonType: "object",
+//           required: ["genge", "year"],
+//           properties:{
+//             genge : {
+//               enum: ["comedy", "triller", "detective", null],
+//               description : "must be one from comedy, triller, detective"
+//             },
+//             year: {
+//                bsonType: "int",
+//                minimum: 1000,
+//                maximum: 2030,
+//                description: "must be an integer in [ 1000, 2030 ] and is required"
+//             }
+//           }
+//         }
+//       }
+//     }}});
+
+db.movies.insertOne({title:"num",
+director:"Pew",
+info:{
+  genge: "comedy",
+  year: 2000
+}})
