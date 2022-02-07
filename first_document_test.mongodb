@@ -29,9 +29,78 @@ use('fm_mongo');
 //       }
 //     }}});
 
-db.movies.insertOne({title:"num",
-director:"Pew",
-info:{
-  genge: "comedy",
-  year: 2000
-}})
+// db.createCollection('manufacturers',{
+//   validator:{
+//     $jsonSchema:{
+//       bsonType : "object",
+//       required: ['name'],
+//       properties: {
+//         name:{
+//           bsonType: "string"
+//         }
+//       }
+//     }
+//   }
+// })
+// db.manufacturers.insertMany([{"name":'man1'},{"name":'man2'},{"name":'man3'}]);
+
+// "6200c88de69d1452d852ce03"
+// "6200c88de69d1452d852ce04"
+// "6200c88de69d1452d852ce05"
+// db.manufacturers.insertMany
+
+// db.products.drop();
+// db.createCollection('products', {
+//   validator:{
+//     $jsonSchema:{
+//       bsonType:'object',
+//       required: ['name', 'price', 'qty', 'manId'],
+//       properties:{
+//         name:{
+//           bsonType:'string'
+//         },
+//         price:{
+//           bsonType:'double'
+//         },
+//         qty:{
+//           bsonType:'int'
+//         },
+//         manId:{
+//           bsonType:'objectId'
+//         }
+//       }
+//     }
+//   }
+// });
+
+//db.manufacturers.find()
+
+// db.products.insertMany([
+//   {name: 'Tomato', price: 12.2, qty: 10, manId: new ObjectId('6200c88de69d1452d852ce03')}]);
+
+// db.products.find();
+
+// db.products.aggregate([{
+//   $lookup: {
+//     from: 'manufacturers',
+//     localField: 'manId',
+//     foreignField: '_id',
+//     as: 'arrMan'
+//     }
+//   },{
+//     $unwind: '$arrMan'
+//   },{
+//     $unset:'manId'  
+//   },{
+//     $group: {
+//     _id: '$manId',
+//     nameMyCouner: {
+//       $sum: 1
+//     }
+//   }}])
+
+db.products.aggregate([{
+  $sort: {
+    amount: 1
+    }
+  }])

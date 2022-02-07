@@ -8,6 +8,8 @@ mongoose
 .connect('mongodb://localhost:27017/fm_mongoose')
 .catch(error => console.log(error));
 
+const emailSchema = yup.string().email().required();
+
 const tastSchema = new Schema({
   title: {
     type: String, 
@@ -25,11 +27,14 @@ const tastSchema = new Schema({
       require: true
     },
     email:{
-      validate: yup.string().email().required()
+      type:String,
+      required:true,
+      validate:{
+        validator:(v)=>emailSchema.isValid(v)
+      } 
     },
     age: {
-      type: Number,
-      default:null,
+      type: Number,      
       validate:{
         validator: (v)=>v>0
       } 
@@ -37,9 +42,22 @@ const tastSchema = new Schema({
   }
 });
 
+const commentsSchema = new Schema({
+  title:{
+    type: String,
+    required:true
+  },
+  taskLink: {
+    type: Schema.Types.ObjectId, ref: 'Task'
+  }
+})
+
+
 
 
 const Task = mongoose.model('Task', tastSchema);
+const Comment = mongoose.model('Comment', commentsSchema);
+
 
 const getMethod = async (req,res,next)=>{
   try{
@@ -58,11 +76,38 @@ const postMethod = async (req,res,next)=>{
     next(error);
   }
 }
+const updateMehtod = async (req,res,next)=>{
+  try{
+    const {body, params:{taskId}}= req;
+    const updatedTask = await Task.findOneAndUpdate({_id:taskId}, body,{returnDocument:'after'});
+    res.status(200).send(updatedTask);
+  }catch(error){
+    next(error);
+  }
+}
+const deleteTask = async (req,res,next)=>{
+  try{
+    const {params:{taskId}}= req;
+    const deleteTask = await Task.findByIdAndRemove(taskId);
+    if(deleteTask){
+      res.status(200).send(deleteTask)
+    }
+    res.status(404).send();
+  }catch(error){
+    next(error);
+  }
+}
+
 
 const app = express();
 app.use(express.json());
 app.post('/', postMethod);
 app.get('/', getMethod);
+app.patch('/:taskId', updateMehtod)
+app.delete('/:taskId', deleteTask);
+
+
+
 
 
 const server = http.createServer(app);
