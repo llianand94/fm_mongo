@@ -40,6 +40,9 @@ const tastSchema = new Schema({
       } 
     }
   }
+},{
+  versionKey: false,
+  timestamps: true
 });
 
 const commentsSchema = new Schema({
@@ -48,8 +51,13 @@ const commentsSchema = new Schema({
     required:true
   },
   taskLink: {
-    type: Schema.Types.ObjectId, ref: 'Task'
+    type: Schema.Types.ObjectId, ref: 'Task',
+    required:true
   }
+},
+{
+  versionKey: false,
+  timestamps: true
 })
 
 
@@ -98,6 +106,29 @@ const deleteTask = async (req,res,next)=>{
   }
 }
 
+const postComment = async (req,res,next)=>{
+  try{
+    const {body, params:{taskId}}= req;
+    const newComment = await Comment.create({...body, taskLink:taskId})
+    res.status(200).send(newComment);
+  }catch(error){
+    next(error);
+  }
+}
+const getAllComments = async (req, res, next)=>{
+  try{
+    Comment.find()
+    .populate('taskLink')
+    .exec((error,comments)=>{
+      if(error){
+        throw error
+      }
+      res.send(comments);
+    })    
+  }catch(error){
+    next(error);
+  }
+}
 
 const app = express();
 app.use(express.json());
@@ -106,8 +137,8 @@ app.get('/', getMethod);
 app.patch('/:taskId', updateMehtod)
 app.delete('/:taskId', deleteTask);
 
-
-
+app.post('/:taskId/comments/',postComment);
+app.get('/comments/', getAllComments);
 
 
 const server = http.createServer(app);
