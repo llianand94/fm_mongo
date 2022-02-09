@@ -3,10 +3,15 @@ const express = require('express');
 const yup = require('yup');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const host = 'fm_mongo';
+
 
 mongoose
-.connect('mongodb://localhost:27017/fm_mongoose')
-.catch(error => console.log(error));
+.connect(`mongodb://${host}:27017/fm_mongoose`)
+.catch(error => {
+  console.log(error);
+  process.exit(1)
+});
 
 const emailSchema = yup.string().email().required();
 
@@ -142,5 +147,5 @@ app.get('/comments/', getAllComments);
 
 
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT,()=>{console.log("Server started at port " + PORT)});

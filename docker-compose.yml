@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  backend-app:
+    build:
+      context: ./
+      # dockerfile:если по другому называется
+    ports:
+      - "3005:3000"
+    environment:
+      PORT: 3000
+    volumes:
+      - ./:/server:ro
+    depends_on:
+      - fm_mongo
+    networks:
+      - net1              
+  fm_mongo: 
+    image: mongo
+    restart:
+      always
+    networks:
+      - net1 
+    volumes:
+      - /home/documents/backup:/data/db -d mongo
+
+networks: 
+  net1:
+    name: n1
