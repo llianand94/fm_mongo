@@ -1,0 +1,5 @@
+{
+  "MONGOHOST" : "fm_mongo",
+  "MONGOPORT": "27017",
+  "DBNAME" : "fm_mongoose"
+}
